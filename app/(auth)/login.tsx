@@ -1,80 +1,80 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   ImageBackground,
-  Platform,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useRouter } from 'expo-router';
 
-// Use relative path from app/(auth)/login.tsx to assets/images
-const galaxyBg = require('../../assets/images/Main - Galaxy bg.png');
+// From app/(auth)/login.tsx: ../ -> app/, ../../ -> project root
+const galaxyBg = require('../../assets/images/Galaxy.png');
 
 export default function LoginScreen() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
-  const handleLogin = () => {
-    // TODO: hook this up to your auth logic
-    console.log('Login pressed', { username, password });
-  };
-
-  // Debug: Log the image source
-  console.log('Galaxy BG source:', galaxyBg);
-  console.log('Type:', typeof galaxyBg);
-  console.log('Platform:', Platform.OS);
-  console.log('Full object:', JSON.stringify(galaxyBg, null, 2));
+  const router = useRouter();
 
   return (
-    <ImageBackground
-      source={galaxyBg}
-      resizeMode="cover"
-      style={styles.background}
-      imageStyle={styles.backgroundImage}
-    >
+    <ImageBackground source={galaxyBg} style={styles.background} resizeMode="cover">
       <View style={styles.overlay}>
-        <Text style={styles.title}>WELCOME TO SIGNBRIDGE!</Text>
+        <Text style={styles.title}>WELCOME TO SIGNBRIDGE !</Text>
 
         <View style={styles.form}>
-          <View style={styles.fieldContainer}>
+          <View style={styles.fieldGroup}>
             <Text style={styles.label}>Username :</Text>
             <TextInput
               value={username}
               onChangeText={setUsername}
-              placeholder="Enter username"
-              placeholderTextColor="#b5b5c8"
+              placeholder="Enter your username"
+              placeholderTextColor="rgba(0,0,0,0.35)"
               style={styles.input}
+              autoCapitalize="none"
             />
           </View>
 
-          <View style={styles.fieldContainer}>
+          <View style={styles.fieldGroup}>
             <Text style={styles.label}>Password :</Text>
             <TextInput
               value={password}
               onChangeText={setPassword}
-              placeholder="Enter password"
-              placeholderTextColor="#b5b5c8"
-              secureTextEntry
+              placeholder="Enter your password"
+              placeholderTextColor="rgba(0,0,0,0.35)"
               style={styles.input}
+              secureTextEntry
             />
           </View>
 
-          <TouchableOpacity activeOpacity={0.8} style={styles.button} onPress={handleLogin}>
+          {/* Login button (no icon) */}
+          <TouchableOpacity
+            activeOpacity={0.85}
+            style={styles.button}
+            onPress={() => router.push('/homepage')}
+          >
+            <View style={styles.buttonInner}>
+              <Text style={styles.buttonText}>LOGIN</Text>
+            </View>
+          </TouchableOpacity>
+
+          {/* Sign up button (with icon) */}
+          <TouchableOpacity
+            activeOpacity={0.85}
+            style={[styles.button, styles.signUpButton]}
+            onPress={() => router.push('/(auth)/signup')}
+          >
             <View style={styles.buttonInner}>
               <Text style={styles.buttonText}>SIGN UP</Text>
-              <View style={styles.buttonIconWrapper}>
-                <View style={styles.buttonIconCircle}>
-                  <View style={styles.buttonIconImageWrapper}>
-                    <Text style={styles.buttonIconEmoji}>👤</Text>
-                  </View>
+              <View style={styles.buttonIconOuter}>
+                <View style={styles.buttonIconInner}>
+                  <Text style={styles.buttonIconEmoji}>👤</Text>
                 </View>
               </View>
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity activeOpacity={0.7}>
+          <TouchableOpacity activeOpacity={0.7} style={styles.forgotWrapper}>
             <Text style={styles.forgotText}>Forgot Password?</Text>
           </TouchableOpacity>
         </View>
@@ -86,93 +86,92 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#1a0033', // Temporary fallback color (dark purple) to verify component renders
-  },
-  backgroundImage: {
-    resizeMode: 'cover',
+    backgroundColor: 'black',
   },
   overlay: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 32,
-    backgroundColor: 'transparent',
   },
   title: {
-    color: '#ffffff',
+    color: '#FFFFFF',
     fontSize: 18,
-    letterSpacing: 2,
+    letterSpacing: 3,
     textAlign: 'center',
     marginBottom: 40,
-    fontWeight: '700',
   },
   form: {
     width: '100%',
     maxWidth: 320,
   },
-  fieldContainer: {
-    marginBottom: 20,
+  fieldGroup: {
+    marginBottom: 18,
   },
   label: {
-    color: '#ffffff',
-    fontSize: 14,
+    color: '#FFFFFF',
     marginBottom: 6,
+    fontSize: 13,
+    letterSpacing: 1,
   },
   input: {
-    backgroundColor: '#ffffff',
-    borderRadius: 24,
-    paddingHorizontal: 14,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: '#FFFFFF',
+    paddingHorizontal: 16,
     paddingVertical: 10,
-    fontSize: 14,
+    backgroundColor: '#FFFFFF',
+    color: '#000000',
   },
   button: {
-    marginTop: 16,
-    borderRadius: 28,
-    borderWidth: 2,
-    borderColor: '#ffffff',
+    marginTop: 18,
     alignSelf: 'center',
+    borderRadius: 999,
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
     overflow: 'hidden',
   },
   buttonInner: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#5a59c6',
-    paddingHorizontal: 28,
+    justifyContent: 'center',
+    paddingHorizontal: 40,
     paddingVertical: 12,
+    backgroundColor: '#6150D8',
   },
   buttonText: {
-    color: '#ffffff',
-    fontSize: 18,
-    fontWeight: '700',
-    letterSpacing: 2,
+    color: '#FFFFFF',
+    fontSize: 16,
+    letterSpacing: 3,
   },
-  buttonIconWrapper: {
+  buttonIconOuter: {
     marginLeft: 16,
-  },
-  buttonIconCircle: {
-    borderRadius: 999,
     borderWidth: 2,
-    borderColor: '#ffffff',
-    padding: 4,
+    borderColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 3,
   },
-  buttonIconImageWrapper: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: '#ffffff',
+  buttonIconInner: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: '#FFFFFF',
     alignItems: 'center',
     justifyContent: 'center',
   },
   buttonIconEmoji: {
-    fontSize: 18,
+    fontSize: 16,
+  },
+  signUpButton: {
+    marginTop: 18,
+  },
+  forgotWrapper: {
+    marginTop: 18,
+    alignItems: 'center',
   },
   forgotText: {
-    marginTop: 12,
-    textAlign: 'center',
     fontSize: 11,
-    color: '#ffffff',
+    color: '#FFFFFF',
   },
 });
 
